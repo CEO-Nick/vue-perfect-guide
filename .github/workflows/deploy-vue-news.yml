@@ -1,9 +1,11 @@
-name: Deploy to Home Server
+name: Deploy Vue News to Home Server
 
 on:
   push:
     branches:
       - master
+    paths:
+      - 'vue-news/**'  # vue-news 디렉토리 변경 시에만 실행
   workflow_dispatch:
 
 jobs:
@@ -26,7 +28,7 @@ jobs:
             --exclude='.git' \
             --exclude='node_modules' \
             --exclude='.github' \
-            ./ $DEPLOY_DIR/
+            vue-news/ $DEPLOY_DIR/
 
       - name: Build and deploy with Docker
         run: |
