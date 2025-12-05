@@ -1,0 +1,32 @@
+# Git
+.git
+.gitignore
+
+# Node
+node_modules
+npm-debug.log
+yarn-error.log
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# CI/CD
+.github
+
+# 빌드 결과물 (multi-stage에서 생성됨)
+dist
+
+# 기타
+*.md
+!README.md
+.env
+.env.local
+.env.*.local

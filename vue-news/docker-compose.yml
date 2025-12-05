@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  vue-news:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vue-news
+    restart: unless-stopped
+    ports:
+      - "3001:80"  # 호스트:컨테이너 (원하는 포트로 변경 가능)
+    networks:
+      - webnet
+    labels:
+      - "project=vue-news"
+      - "environment=production"
+
+networks:
+  webnet:
+    driver: bridge

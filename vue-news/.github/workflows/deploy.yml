@@ -1,0 +1,74 @@
+name: Deploy to Home Server
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create deployment directory
+        run: |
+          DEPLOY_DIR="/home/docker/vue-news"
+          mkdir -p $DEPLOY_DIR
+
+      - name: Copy files to deployment directory
+        run: |
+          DEPLOY_DIR="/home/docker/vue-news"
+          rsync -av --delete \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='.github' \
+            ./ $DEPLOY_DIR/
+
+      - name: Build and deploy with Docker
+        run: |
+          cd /home/docker/vue-news
+
+          # 기존 컨테이너 중지 및 제거 (있는 경우)
+          docker-compose down || true
+
+          # 사용하지 않는 이미지 정리
+          docker image prune -f
+
+          # 새 이미지 빌드 및 컨테이너 시작
+          docker-compose up -d --build
+
+          # 컨테이너 상태 확인
+          docker-compose ps
+
+      - name: Clean up old images
+        run: |
+          # dangling 이미지 삭제
+          docker image prune -f
+
+          # 오래된 vue-news 이미지 삭제 (최신 1개만 유지)
+          docker images | grep vue-news | awk '{print $3}' | tail -n +2 | xargs -r docker rmi -f || true
+
+      - name: Verify deployment
+        run: |
+          # 컨테이너가 정상적으로 실행 중인지 확인
+          if [ "$(docker ps -q -f name=vue-news)" ]; then
+            echo "✅ vue-news 컨테이너가 정상적으로 실행 중입니다."
+            docker logs vue-news --tail 20
+          else
+            echo "❌ vue-news 컨테이너 실행 실패!"
+            docker logs vue-news --tail 50
+            exit 1
+          fi
+
+      - name: Notify deployment
+        if: success()
+        run: |
+          echo "========================================="
+          echo "✅ 배포가 성공적으로 완료되었습니다!"
+          echo "========================================="
+          echo "컨테이너 정보:"
+          docker ps -f name=vue-news --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
