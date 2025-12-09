@@ -1,8 +1,13 @@
 <template>
   <div>
-    <div v-for="item in fetchedJobs" :key="item.id">
-      {{ item.title }}
-    </div>
+    <p v-for="item in fetchedJobs" :key="item.id">
+      <a :href="item.url">
+        {{ item.title }}
+      </a>
+      <small>
+        {{ item.time_ago}}, {{ item.domain }}
+      </small>
+    </p>
   </div>
 </template>
 
@@ -12,7 +17,7 @@ import {mapGetters} from "vuex";
 export default {
   computed: {
     ...mapGetters([
-        'fetchedJobs'
+      'fetchedJobs'
     ])
   },
   created() {
