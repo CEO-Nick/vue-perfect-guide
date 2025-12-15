@@ -9,9 +9,11 @@
 
         <!-- 기타 정보 영역-->
         <div>
-          <router-link class="ask-title" :to="`/item/${item.id}`">
-            {{ item.title }}
-          </router-link>
+          <p class="ask-title">
+            <router-link :to="`/item/${item.id}`">
+              {{ item.title }}
+            </router-link>
+          </p>
 
           <small class="ask-text">
             {{ item.time_ago }} by
