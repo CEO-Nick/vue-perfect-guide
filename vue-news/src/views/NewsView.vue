@@ -1,6 +1,6 @@
 <template>
   <div>
-    <list-item></list-item>
+    <list-item :domain="domain"></list-item>
   </div>
 </template>
 
@@ -10,6 +10,11 @@ import ListItem from '../components/ListItem.vue'
 export default {
   components: {
     ListItem,
+  },
+  data() {
+    return {
+      domain: 'FETCH_NEWS',
+    }
   }
 }
 

@@ -27,13 +27,18 @@
 import {mapGetters} from "vuex";
 
 export default {
+  props: {
+    domain: {
+      type: String,
+    }
+  },
   computed: {
     ...mapGetters([
       'fetchedNews'
     ])
   },
   created() {
-    this.$store.dispatch('FETCH_NEWS');
+    this.$store.dispatch(this.domain);
   },
 };
 </script>
