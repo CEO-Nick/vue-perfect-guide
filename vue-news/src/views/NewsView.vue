@@ -18,15 +18,8 @@
             <router-link class="link-text" :to="`/user/${item.user}`"> {{ item.user }} </router-link>
           </small>
         </div>
-
-
       </li>
     </ul>
-    <p v-for="item in fetchedNews" :key="item.id">
-
-
-
-    </p>
   </div>
 </template>
 
