@@ -1,6 +1,6 @@
 <template>
   <div>
-    <list-item :domain="domain"></list-item>
+    <list-item></list-item>
   </div>
 </template>
 
@@ -11,11 +11,6 @@ export default {
   components: {
     ListItem,
   },
-  data() {
-    return {
-      domain: 'FETCH_NEWS',
-    }
-  }
 }
 
 </script>

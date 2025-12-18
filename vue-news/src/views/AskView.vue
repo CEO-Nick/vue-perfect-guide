@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ListItem :domain="domain"></ListItem>
+    <list-item></list-item>
   </div>
 </template>
 <script>
@@ -10,10 +10,5 @@ export default {
   components: {
     ListItem,
   },
-  data() {
-    return {
-      domain: "FETCH_ASK"
-    }
-  }
 };
 </script>

@@ -1,21 +1,37 @@
 <template>
   <div>
     <ul class="news-list">
-      <li v-for="item in fetchedNews" :key="item.id" class="post">
+      <li v-for="item in listItems" :key="item.id" class="post">
         <!-- 포인트 영역 -->
         <div class="points">
-          {{ item.points }}
+          {{ item.points || 0 }}
         </div>
         <!-- 기타 정보 영역 -->
         <div>
+          <!-- 타이틀 영역 -->
           <p class="news-title">
-            <a v-bind:href="item.url">
-              {{ item.title }}
-            </a>
+            <!-- news는 domain이 있고, ask는 domain이 없다-->
+            <template v-if="item.domain">
+              <a v-bind:href="item.url">
+                {{ item.title }}
+              </a>
+            </template>
+            <template v-else>
+              <router-link v-bind:to="`item/${item.id}`">
+                {{ item.title }}
+              </router-link>
+            </template>
           </p>
           <small class="link-text">
             by
-            <router-link class="link-text" :to="`/user/${item.user}`"> {{ item.user }} </router-link>
+            <router-link
+                v-if="item.user"
+                class="link-text"
+                :to="`/user/${item.user}`"> {{ item.user }}
+            </router-link>
+            <a :href="item.url" v-else>
+              {{ item.domain }}
+            </a>
           </small>
         </div>
       </li>
@@ -24,21 +40,34 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+import {mapGetters} from 'vuex';
 
 export default {
-  props: {
-    domain: {
-      type: String,
+  computed: {
+    ...mapGetters(['fetchedNews', 'fetchedAsk', 'fetchedJobs']),
+    // eslint-disable-next-line vue/return-in-computed-property
+    listItems() {
+      const name = this.$route.name;
+      if (name === 'news') {
+        return this.fetchedNews;
+      } else if (name === 'ask') {
+        return this.fetchedAsk;
+      } else if (name === 'jobs') {
+        return this.fetchedJobs;
+      }
     }
   },
-  computed: {
-    ...mapGetters([
-      'fetchedNews'
-    ])
-  },
   created() {
-    this.$store.dispatch(this.domain);
+    const name = this.$route.name;
+    let actionName;
+    if (name === 'news') {
+      actionName = 'FETCH_NEWS';
+    } else if (name === 'ask') {
+      actionName = 'FETCH_ASK';
+    } else if (name === 'jobs') {
+      actionName = 'FETCH_JOBS';
+    }
+    this.$store.dispatch(actionName);
   },
 };
 </script>
@@ -48,6 +77,7 @@ export default {
   margin: 0;
   padding: 0;
 }
+
 .post {
   list-style: none;
   display: flex;
@@ -55,6 +85,7 @@ export default {
   border-bottom: 1px solid #eee;
 
 }
+
 .points {
   width: 80px;
   height: 60px;
@@ -63,10 +94,12 @@ export default {
   justify-content: center;
   color: #42b883
 }
+
 .news-title {
   margin: 0;
 }
+
 .link-text {
-  color:#828282;
+  color: #828282;
 }
 </style>
