@@ -9,7 +9,10 @@ import {
 export default {
   FETCH_NEWS(context) {
     fetchNewsList()
-    .then((response) => context.commit('SET_NEWS', response.data))
+    .then((response) => {
+      context.commit('SET_NEWS', response.data)
+      return response;
+    })
     .catch((error) => console.log(error));
   },
   // context 안에 commit이 있어서 바로 꺼내서 쓴다 = destructuring
