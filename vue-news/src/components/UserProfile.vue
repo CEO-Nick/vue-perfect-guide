@@ -7,22 +7,24 @@
           <i class="fas fa-user"></i>
         </div>
         <div class="user-description">
-<!--          <router-link :to="`/user/${itemInfo.user}`">-->
-<!--            {{ itemInfo.user }}-->
-<!--          </router-link>-->
-<!--          <div class="time">-->
-<!--            {{ itemInfo.time_ago }}-->
-<!--          </div>-->
+          <slot name="username"></slot>
+          <div class="time">
+            <slot name="time"></slot>
+            <slot name="karma"></slot>
+          </div>
         </div>
       </div>
-<!--      <h2> {{ itemInfo.title }}</h2>-->
     </section>
   </div>
 </template>
 
 <script>
+
 export default {
-  name: 'UserProfile'
+  name: 'UserProfile',
+  props: {
+    info: Object,
+  },
 }
 </script>
 
